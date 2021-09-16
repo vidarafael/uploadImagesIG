@@ -9,6 +9,15 @@ import { Loading } from '../components/Loading';
 import { Error } from '../components/Error';
 
 export default function Home(): JSX.Element {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const fetchImages = ({ pageParam = null }) => {
+    const datas = api
+      .get(`/api/images?after=${pageParam}`)
+      .then(response => response.data);
+
+    return datas;
+  };
+
   const {
     data,
     isLoading,
@@ -19,13 +28,31 @@ export default function Home(): JSX.Element {
   } = useInfiniteQuery(
     'images',
     // TODO AXIOS REQUEST WITH PARAM
-    ,
+    fetchImages,
     // TODO GET AND RETURN NEXT PAGE PARAM
+    {
+      getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    }
   );
+
+  /*
+    return {
+      title: project.title,
+      description: project.description,
+      url: project.url,
+      ts: project.ts,
+      id: project.id,
+    };
+  */
 
   const formattedData = useMemo(() => {
     // TODO FORMAT AND FLAT DATA ARRAY
+    const datas = api.get(`/api/images`).then(response => response.data);
+
+    return datas;
   }, [data]);
+
+  console.log(formattedData);
 
   // TODO RENDER LOADING SCREEN
 

@@ -16,13 +16,19 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
   const [localImageUrl, setLocalImageUrl] = useState('');
   const toast = useToast();
 
+  const validationRegexImageFormats =
+    /(?:([^:/?#]+):)?(?:([^/?#]*))?([^?#](?:jpeg|gif|png))(?:\?([^#]*))?(?:#(.*))?/g
+  // /\.(gif|jpe?g|png)$/g;
   const formValidations = {
     image: {
       // TODO REQUIRED, LESS THAN 10 MB AND ACCEPTED FORMATS VALIDATIONS
       required: 'Arquivo obrigatório',
       validate: {
-        lessThan10MB: v => Number(v) <= 10,
-        acceptedFormats: 'regex',
+        lessThan10MB: file =>
+          file[0].size <= 10000000 || 'O arquivo deve ser menor que 10MB',
+        acceptedFormats: file =>
+          validationRegexImageFormats.test(file[0].type) ||
+          'Somente são aceitos arquivos PNG, JPEG e GIF',
       },
     },
     title: {
@@ -73,6 +79,8 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
           setLocalImageUrl={setLocalImageUrl}
           setError={setError}
           trigger={trigger}
+          {...register('image', formValidations.image)}
+          error={errors.image}
           // TODO SEND IMAGE ERRORS
           // TODO REGISTER IMAGE INPUT WITH VALIDATIONS
         />

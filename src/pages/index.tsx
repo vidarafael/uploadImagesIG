@@ -52,8 +52,6 @@ export default function Home(): JSX.Element {
     return datas;
   }, [data]);
 
-  console.log(formattedData);
-
   // TODO RENDER LOADING SCREEN
 
   // TODO RENDER ERROR SCREEN

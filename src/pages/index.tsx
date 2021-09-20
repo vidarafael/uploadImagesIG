@@ -10,12 +10,16 @@ import { Error } from '../components/Error';
 
 export default function Home(): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const fetchImages = ({ pageParam = null }) => {
-    const datas = api
-      .get(`/api/images?after=${pageParam}`)
+  const fetchImages = async ({ pageParam = null }) => {
+    const { data } = await api
+      .get('/api/images', {
+        params: {
+          after: pageParam,
+        },
+      })
       .then(response => response.data);
 
-    return datas;
+    return data;
   };
 
   const {
@@ -31,7 +35,7 @@ export default function Home(): JSX.Element {
     fetchImages,
     // TODO GET AND RETURN NEXT PAGE PARAM
     {
-      getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+      getNextPageParam: lastPage => lastPage?.after || null,
     }
   );
 
@@ -45,11 +49,11 @@ export default function Home(): JSX.Element {
     };
   */
 
-  const formattedData = useMemo(() => {
+  const formattedData = useMemo(async () => {
     // TODO FORMAT AND FLAT DATA ARRAY
-    const datas = api.get(`/api/images`).then(response => response.data);
+    const newDataFormatted = data?.pages.flat(2);
 
-    return datas;
+    return newDataFormatted;
   }, [data]);
 
   // TODO RENDER LOADING SCREEN

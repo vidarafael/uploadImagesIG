@@ -11,13 +11,13 @@ import { Error } from '../components/Error';
 export default function Home(): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const fetchImages = async ({ pageParam = null }) => {
-    const { data } = await api
-      .get('/api/images', {
-        params: {
-          after: pageParam,
-        },
-      })
-      .then(response => response.data);
+    const { data } = await api.get('/api/images', {
+      params: {
+        after: pageParam,
+      },
+    });
+
+    console.log('getApi', data);
 
     return data;
   };
@@ -46,10 +46,11 @@ export default function Home(): JSX.Element {
     return newDataFormatted;
   }, [data]);
 
+  console.log(data)
+
   // TODO RENDER LOADING SCREEN
 
   // TODO RENDER ERROR SCREEN
-  console.log(data)
 
   // eslint-disable-next-line no-nested-ternary
   return isError ? (
@@ -67,11 +68,7 @@ export default function Home(): JSX.Element {
       <Box maxW={1120} px={20} mx="auto" my={20}>
         <CardList cards={formattedData} />
         {hasNextPage ? (
-          <Button
-            onClick={() => {
-              fetchNextPage();
-            }}
-          >
+          <Button type="button" onClick={fetchNextPage}>
             Carregar mais
           </Button>
         ) : (

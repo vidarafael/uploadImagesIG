@@ -17,8 +17,6 @@ export default function Home(): JSX.Element {
       },
     });
 
-    console.log('getApi', data);
-
     return data;
   };
 
@@ -41,12 +39,12 @@ export default function Home(): JSX.Element {
 
   const formattedData = useMemo(() => {
     // TODO FORMAT AND FLAT DATA ARRAY
-    const newDataFormatted = data?.pages.flat(2);
+    const newDataFormatted = data?.pages.flatMap(item => item.data);
 
     return newDataFormatted;
   }, [data]);
 
-  console.log(data)
+  console.log(formattedData);
 
   // TODO RENDER LOADING SCREEN
 
@@ -69,7 +67,7 @@ export default function Home(): JSX.Element {
         <CardList cards={formattedData} />
         {hasNextPage ? (
           <Button type="button" onClick={fetchNextPage}>
-            Carregar mais
+            {isFetchingNextPage ? 'Carregando...' : 'Carregar mais'}
           </Button>
         ) : (
           <></>
